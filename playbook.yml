@@ -2,4 +2,6 @@
 - hosts: node
   gather_facts: no
   roles:
-    - common
+    - role: common
+      vars:
+        - ansible_become: yes
