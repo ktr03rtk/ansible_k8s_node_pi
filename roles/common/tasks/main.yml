@@ -1,0 +1,6 @@
+---
+- name: test
+  shell: echo "main" >> main.log
+
+- name: test2
+  shell: echo "main" >> main2.log
