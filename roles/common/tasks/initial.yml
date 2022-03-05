@@ -1,0 +1,47 @@
+---
+- name: Set a hostname
+  hostname:
+    name: "{{ hostname }}"
+
+- name: Update package
+  apt:
+    update_cache: yes
+    upgrade: yes
+
+- name: Restrict password authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PasswordAuthentication"
+    insertafter: "^#PasswordAuthentication"
+    line: "PasswordAuthentication no"
+
+- name: Restrict challenge response authentication
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^ChallengeResponseAuthentication"
+    insertafter: "^#ChallengeResponseAuthentication"
+    line: "ChallengeResponseAuthentication no"
+
+- name: Restrict root login
+  lineinfile:
+  lineinfile:
+    dest: /etc/ssh/sshd_config
+    regexp: "^PermitRootLogin"
+    insertafter: "^#PermitRootLogin"
+    line: "PermitRootLogin no"
+
+- name: Restart sshd
+  service:
+    name: sshd
+    state: restarted
+
+- name: Default ufw setting
+  ufw:
+    state: enabled
+    policy: deny
+
+- name: Allow all access to port
+  ufw:
+    rule: allow
+    port: "{{ sshd_port }}"
+    proto: tcp
