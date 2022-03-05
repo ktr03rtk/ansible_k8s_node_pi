@@ -12,18 +12,89 @@
 - name: Ensure br_netfilter is enabled.
   modprobe:
     name: br_netfilter
-    state: present
 
 - name: sysctl net.bridge.bridge-nf-call-ip6tables
   sysctl:
     name: net.bridge.bridge-nf-call-ip6tables
     value: "1"
-    state: present
     sysctl_file: /etc/sysctl.d/k8s.conf
 
 - name: sysctl net.bridge.bridge-nf-call-iptables
   sysctl:
     name: net.bridge.bridge-nf-call-iptables
     value: "1"
-    state: present
     sysctl_file: /etc/sysctl.d/k8s.conf
+
+- name: Enable container features
+  replace:
+    path: /boot/firmware/cmdline.txt
+    regexp: '^([\w](?!.*\b{{ item }}\b).*)$'
+    replace: '\1 {{ item }}'
+  loop:
+    - "cgroup_memory=1"
+    - "cgroup_enable=memory"
+
+- name: Restart node
+  shell: shutdown -r now
+  async: 1
+  poll: 0
+  ignore_errors: true
+
+- name: Wait for restart
+  wait_for_connection:
+    delay: 20
+
+- name: Install packages
+  apt:
+    name:
+      - apt-transport-https
+      - ca-certificates
+      - curl
+      - gnupg
+      - lsb-release
+
+- name: Add docker GPG key
+  apt_key:
+    url: https://download.docker.com/linux/ubuntu/gpg
+
+- name: Add apt repository
+  apt_repository:
+    repo: "deb [arch=arm64] https://download.docker.com/linux/ubuntu {{ ansible_distribution_release }} stable"
+
+- name: Install Docker packages
+  apt:
+    name:
+      - docker-ce
+      - docker-ce-cli
+      - containerd.io
+
+- name: Add user to docker group
+  user:
+    name: "{{ ansible_ssh_user }}"
+    groups: docker
+    append: yes
+
+- name: Add docker kubeadm key
+  apt_key:
+    url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
+    keyring: /usr/share/keyrings/kubernetes-archive-keyring.gpg
+
+- name: Add apt repository
+  apt_repository:
+    repo: "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main"
+
+- name: Install kubeadm packages
+  apt:
+    name:
+      - kubelet
+      - kubeadm
+      - kubectl
+
+- name: Hold kubeadm
+  dpkg_selections:
+    name: "{{ item }}"
+    selection: hold
+  loop:
+    - kubelet
+    - kubeadm
+    - kubectl
