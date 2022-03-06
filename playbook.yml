@@ -10,3 +10,8 @@
   gather_facts: no
   roles:
     - role: master
+
+- hosts: worker
+  gather_facts: no
+  roles:
+    - role: worker

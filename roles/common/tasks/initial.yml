@@ -6,7 +6,13 @@
 - name: Update package
   apt:
     update_cache: yes
-    upgrade: yes
+
+- name: Upgrade package
+  apt:
+    upgrade: full
+  register: apt_action
+  retries: 100
+  until: apt_action is success or ('Failed to lock apt for exclusive operation' not in apt_action.msg and '/var/lib/dpkg/lock' not in apt_action.msg)
 
 - name: Restrict password authentication
   lineinfile:
@@ -35,13 +41,13 @@
     name: sshd
     state: restarted
 
-- name: Default ufw setting
-  ufw:
-    state: enabled
-    policy: deny
+# - name: Default ufw setting
+#   ufw:
+#     state: enabled
+#     policy: deny
 
-- name: Allow all access to port
-  ufw:
-    rule: allow
-    port: "{{ sshd_port }}"
-    proto: tcp
+# - name: Allow all access to port
+#   ufw:
+#     rule: allow
+#     port: "{{ sshd_port }}"
+#     proto: tcp

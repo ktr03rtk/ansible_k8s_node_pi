@@ -6,8 +6,8 @@
       {{ item.ip }} {{ item.name }}
     marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.name }}"
   loop:
-    - { name: node1, ip: "{{ hostvars['node1'].network.ip}}" }
-    - { name: node2, ip: "{{ hostvars['node2'].network.ip}}" }
+    - { name: master1, ip: "{{ hostvars['master1'].network.ip}}" }
+    - { name: worker1, ip: "{{ hostvars['worker1'].network.ip}}" }
 
 - name: Ensure br_netfilter is enabled.
   modprobe:

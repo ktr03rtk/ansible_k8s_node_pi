@@ -1,0 +1,6 @@
+---
+- name: "Kubeadmn join"
+  shell: >
+    kubeadm join master1:6443 --token={{ hostvars['K8S_TOKEN_HOLDER']['token'] }}
+    --discovery-token-ca-cert-hash sha256:{{ hostvars['K8S_TOKEN_HOLDER']['hash'] }}
+  become: yes
