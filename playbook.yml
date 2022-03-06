@@ -1,7 +1,12 @@
 ---
-- hosts: node
+- hosts: all
   # gather_facts: no
   roles:
     - role: common
       vars:
         - ansible_become: yes
+
+- hosts: master
+  gather_facts: no
+  roles:
+    - role: master

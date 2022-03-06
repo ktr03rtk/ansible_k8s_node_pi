@@ -1,0 +1,26 @@
+---
+- name: cluster init
+  shell: >
+    kubeadm init
+    --pod-network-cidr=10.244.0.0/16
+    --control-plane-endpoint=master1
+    --apiserver-cert-extra-sans=master1
+
+- name: Create .kube directory
+  file:
+    path: $HOME/.kube
+    state: directory
+
+- name: Get user home
+  shell: 'getent passwd "{{ansible_ssh_user}}" | cut -d: -f6'
+  register: user_home
+
+- name: Copy kubernetes config
+  copy:
+    src: /etc/kubernetes/admin.conf
+    dest: "{{ user_home.stdout }}/.kube/config"
+    remote_src: yes
+    owner: "{{ansible_ssh_user}}"
+    group: "{{ansible_ssh_user}}"
+    mode: preserve
+  become: yes

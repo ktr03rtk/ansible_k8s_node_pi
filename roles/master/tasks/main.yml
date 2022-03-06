@@ -1,0 +1,2 @@
+---
+- include_tasks: cluster_init.yml

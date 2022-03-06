@@ -74,6 +74,16 @@
     groups: docker
     append: yes
 
+- name: Set systemd to docker cgroup driver
+  template:
+    src: templates/docker_daemon.json.j2
+    dest: /etc/docker/daemon.json
+
+- name: Restart docker service
+  service:
+    name: docker
+    state: restarted
+
 - name: Add docker kubeadm key
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
