@@ -3,11 +3,9 @@
   blockinfile:
     path: /etc/hosts
     block: |
-      {{ item.ip }} {{ item.name }}
-    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ item.name }}"
-  loop:
-    - { name: master1, ip: "{{ hostvars['master1'].network.ip}}" }
-    - { name: worker1, ip: "{{ hostvars['worker1'].network.ip}}" }
+      {{ hostvars[item]['ansible_host'] }} {{ hostvars[item]['inventory_hostname'] }}
+    marker: "# {mark} ANSIBLE MANAGED BLOCK {{ hostvars[item]['inventory_hostname'] }}"
+  loop: "{{ groups['all'] }}"
 
 - name: Ensure br_netfilter is enabled.
   modprobe:

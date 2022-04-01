@@ -1,7 +1,7 @@
 ---
 - name: Set a hostname
   hostname:
-    name: "{{ hostname }}"
+    name: "{{ inventory_hostname }}"
 
 - name: Update package
   apt:
@@ -40,6 +40,11 @@
   service:
     name: sshd
     state: restarted
+
+- name: Set static IP address
+  template:
+    src: templates/99-static.yaml.j2
+    dest: /etc/netplan/99-static.yaml
 
 # - name: Default ufw setting
 #   ufw:
