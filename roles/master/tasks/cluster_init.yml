@@ -42,3 +42,11 @@
 
 - name: Flannel setup
   shell: kubectl apply -f https://raw.githubusercontent.com/flannel-io/flannel/v0.16.3/Documentation/kube-flannel.yml
+
+- name: bash auto-completion
+  blockinfile:
+    path: $HOME/.bashrc
+    block: |
+      source <(kubectl completion bash)
+      alias k=kubectl
+      complete -F __start_kubectl k

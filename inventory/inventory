@@ -1,8 +1,9 @@
 [master]
-master1 ansible_host=192.168.10.112
+master1 ansible_host=192.168.10.108
 
 [worker]
-worker1 ansible_host=192.168.10.113
+worker1 ansible_host=192.168.10.109
+worker2 ansible_host=192.168.10.112
 
 [all:vars]
 gateway=192.168.10.1
