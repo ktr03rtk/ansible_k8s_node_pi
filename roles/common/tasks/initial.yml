@@ -46,6 +46,16 @@
     src: templates/99-static.yaml.j2
     dest: /etc/netplan/99-static.yaml
 
+- name: Set Pi PoE HAT fan control
+  blockinfile:
+    path: /boot/firmware/usercfg.txt
+    block: |
+      dtoverlay=rpi-poe
+      dtparam=poe_fan_temp0=10000,poe_fan_temp0_hyst=1000
+      dtparam=poe_fan_temp1=55000,poe_fan_temp1_hyst=5000
+      dtparam=poe_fan_temp2=60000,poe_fan_temp2_hyst=5000
+      dtparam=poe_fan_temp3=65000,poe_fan_temp3_hyst=5000
+
 # - name: Default ufw setting
 #   ufw:
 #     state: enabled
