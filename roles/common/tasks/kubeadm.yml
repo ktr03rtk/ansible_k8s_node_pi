@@ -82,6 +82,19 @@
     name: docker
     state: restarted
 
+# https://github.com/containerd/containerd/issues/4581#issuecomment-698741693
+- name: Set up containerd
+  become: yes
+  file:
+    path: /etc/containerd/config.toml
+    state: absent
+
+- name: Restart containerd service
+  become: yes
+  service:
+    name: containerd
+    state: restarted
+
 - name: Add docker kubeadm key
   apt_key:
     url: https://packages.cloud.google.com/apt/doc/apt-key.gpg
