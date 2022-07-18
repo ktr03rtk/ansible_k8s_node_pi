@@ -60,11 +60,3 @@
       set expandtab
       set tabstop=2
       set shiftwidth=2
-
-- name: Install kubeseal
-  shell: |
-    mkdir -p /tmp/kubedir
-    curl -sSL https://github.com/bitnami-labs/sealed-secrets/releases/download/v0.17.5/kubeseal-0.17.5-linux-arm64.tar.gz -o /tmp/kubedir/kubeseal.tar.gz
-    tar xzvf /tmp/kubedir/kubeseal.tar.gz -C /tmp/kubedir
-    sudo install -m 755 /tmp/kubedir/kubeseal /usr/local/bin/kubeseal
-    rm -fr /tmp/kubedir
