@@ -14,3 +14,8 @@
   gather_facts: no
   roles:
     - role: worker
+
+- hosts: master
+  gather_facts: no
+  roles:
+    - role: after_init

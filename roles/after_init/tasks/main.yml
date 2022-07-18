@@ -1,0 +1,2 @@
+---
+- include_tasks: custom_resources.yml
