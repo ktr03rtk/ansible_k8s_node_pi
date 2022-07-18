@@ -19,8 +19,3 @@
     kubectl apply -f /tmp/kubeseal_master.key
     kubectl delete pod -n kube-system -l name=sealed-secrets-controller
     rm /tmp/kubeseal_master.key
-
-- name: Install mysql operator custom resource
-  shell: |
-    kubectl apply -f https://raw.githubusercontent.com/mysql/mysql-operator/trunk/deploy/deploy-crds.yaml
-    kubectl apply -f https://raw.githubusercontent.com/mysql/mysql-operator/trunk/deploy/deploy-operator.yaml
